@@ -10,6 +10,7 @@
 		70901823578BB0723DD9CEE8 /* Pods_COVID19Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 235F4BDFEB7992AE7885A07F /* Pods_COVID19Tests.framework */; };
 		78110806C890012018831434 /* Pods_COVID19_COVID19UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9573B6F5BD341A3E9ADA62F /* Pods_COVID19_COVID19UITests.framework */; };
 		9A4CB80F27F0ABCC009BB037 /* CovidDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4CB80E27F0ABCC009BB037 /* CovidDetailViewController.swift */; };
+		9A5FA28427F497A30046EDC8 /* CityCovidOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A5FA28327F497A30046EDC8 /* CityCovidOverview.swift */; };
 		9AE17EC827ECA6FB00AE449B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE17EC727ECA6FB00AE449B /* AppDelegate.swift */; };
 		9AE17ECA27ECA6FB00AE449B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE17EC927ECA6FB00AE449B /* SceneDelegate.swift */; };
 		9AE17ECC27ECA6FB00AE449B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE17ECB27ECA6FB00AE449B /* ViewController.swift */; };
@@ -46,6 +47,7 @@
 		2B32A7E7B8E1DDFA8B4D8FDF /* Pods_COVID19.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_COVID19.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D4568C3E98141EE2E260EBC /* Pods-COVID19Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-COVID19Tests.debug.xcconfig"; path = "Target Support Files/Pods-COVID19Tests/Pods-COVID19Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		9A4CB80E27F0ABCC009BB037 /* CovidDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CovidDetailViewController.swift; sourceTree = "<group>"; };
+		9A5FA28327F497A30046EDC8 /* CityCovidOverview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityCovidOverview.swift; sourceTree = "<group>"; };
 		9AE17EC427ECA6FB00AE449B /* COVID19.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = COVID19.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AE17EC727ECA6FB00AE449B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9AE17EC927ECA6FB00AE449B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				9AE17ED227ECA6FC00AE449B /* LaunchScreen.storyboard */,
 				9AE17ED527ECA6FC00AE449B /* Info.plist */,
 				9A4CB80E27F0ABCC009BB037 /* CovidDetailViewController.swift */,
+				9A5FA28327F497A30046EDC8 /* CityCovidOverview.swift */,
 			);
 			path = COVID19;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				9AE17ECC27ECA6FB00AE449B /* ViewController.swift in Sources */,
 				9A4CB80F27F0ABCC009BB037 /* CovidDetailViewController.swift in Sources */,
 				9AE17EC827ECA6FB00AE449B /* AppDelegate.swift in Sources */,
+				9A5FA28427F497A30046EDC8 /* CityCovidOverview.swift in Sources */,
 				9AE17ECA27ECA6FB00AE449B /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
