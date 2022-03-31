@@ -22,11 +22,83 @@ class ViewController: UIViewController {
             guard let self = self else {return} //self가 일시적으로 strong reference가 되도록 만들어 준다.
             switch result {
             case let .success(result):
-                debugPrint("success \(result)")
+                self.configureStackView(koreaCovidOverview: result.korea) //Alamofire response 메서드의 completionHandler는 메인쓰레드에서 동작하기 때문에 따로 main DispatchQueue를 만들어 주지 않아도 된다.
+                let covidOverviewList = self.makeCovidOverviewList(cityCovidOverview: result)
+                self.configureChartView(covidOverviewList: covidOverviewList)
             case let .failure(error):
                 debugPrint("error \(error)")
             }
         })
+    }
+    
+    //국내 코로나 신규 확진자 수를 PieChart를 통헤 표시하자
+    func makeCovidOverviewList(
+        cityCovidOverview: CityCovidOverview
+    ) -> [CovidOverview] {
+        //JSON 응답이 배열이 아닌 하나의 객체로 오기 때문에 cityCovidOverview객체 안에 있는 시도별 객체를 배열에 추가시키자
+        return [
+            cityCovidOverview.seoul,
+            cityCovidOverview.busan,
+            cityCovidOverview.daegu,
+            cityCovidOverview.incheon,
+            cityCovidOverview.gwangju,
+            cityCovidOverview.daejeon,
+            cityCovidOverview.ulsan,
+            cityCovidOverview.sejong,
+            cityCovidOverview.gyeonggi,
+            cityCovidOverview.chungbuk,
+            cityCovidOverview.chungnam,
+            cityCovidOverview.gyeongbuk,
+            cityCovidOverview.gyeongnam,
+            cityCovidOverview.jeju,
+        ]
+    }
+    
+    func configureChartView(covidOverviewList: [CovidOverview]) {
+        //pieChart에 데이터를 표시하려면 pieChart 데이터 entry라는 객체에 데이터를 추가시켜주어야 한다. 메서드 파라미터에서 전달받은 covidOverviewList를 pieChart데이터 entry라는 객체로 맵핑시켜주자
+        let entries = covidOverviewList.compactMap{ [weak self] overview -> PieChartDataEntry? in
+            guard let self = self else {return nil} //self가 일시적으로 strong reference되도록 만든다.
+            return PieChartDataEntry(
+                value: self.removeFormatString(string: overview.newCase),
+                label: overview.countryName,
+                data: overview //시도별 코로나 상세 데이터를 가질 수 있게 한다.
+            ) //value: 차트 항목에 들어가는 값 넣기
+            //이렇게 하면 entries 상수에는 CovidOverview객체에서 PieChartDataEntry 객체로 맵핑된 배열이 저장되게 된다.
+        }
+        let dataSet = PieChartDataSet(entries: entries, label: "코로나 발생 현황")
+        dataSet.sliceSpace = 1 //항목 간 간격 설정
+        dataSet.entryLabelColor = .black //항목 이름 색 변경
+        dataSet.valueTextColor = .black
+        dataSet.xValuePosition = .outsideSlice // 항목 이름이 PieChart 밖에 표시되게 설정
+        dataSet.valueLinePart1OffsetPercentage = 0.8 //슬라이드 밖에 퍼센테이지로 표시
+        dataSet.valueLinePart1Length = 0.2 // 행의 전반부의 길이를 표시..?
+        dataSet.valueLinePart2Length = 0.3 // 바깥 쪽 선으로 표시되는 항목의 이름이 가독성 좋도록 하자
+        
+        //항목을 다양한 색으로 표시되도록 설정
+        dataSet.colors = ChartColorTemplates.vordiplom() +
+        ChartColorTemplates.joyful() +
+        ChartColorTemplates.liberty() +
+        ChartColorTemplates.pastel() +
+        ChartColorTemplates.material()
+        
+        self.pieChartView.data = PieChartData(dataSet: dataSet)
+        
+        //그래프 회전 시키기
+        self.pieChartView.spin(duration: 0.3, fromAngle: self.pieChartView.rotationAngle, toAngle: self.pieChartView.rotationAngle + 80) //현재 앵글에서 80도 정도로 회전되도록 구현
+    }
+    
+    //문자열을 Double타입으로 바꿔주는 메서드
+    func removeFormatString(string: String) -> Double {
+        let formatter = NumberFormatter()
+        //세 자리마다 , 를 찍어주는 문자열 포맷을 숫자로 변경할 것이기 때문에
+        formatter.numberStyle = .decimal //소수 스타일 포맷 1234.5678 is represented as 1,234.568.
+        return formatter.number(from: string)?.doubleValue ?? 0
+    }
+    
+    //서버에서 받은 데이터를 사용해 화면 구성하기
+    func configureStackView(koreaCovidOverview: CovidOverview){
+        self.totalCaseLabel.text = "\(koreaCovidOverview.totalCase)명"
+        self.newCaseLabel.text = "\(koreaCovidOverview.newCase)명"
     }
 
     /*
