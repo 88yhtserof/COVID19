@@ -11,15 +11,23 @@ import Charts //PieChartView는 Chart 라이브러리에 포함되어있기 때�
 
 class ViewController: UIViewController {
     @IBOutlet weak var totalCaseLabel: UILabel!
+    @IBOutlet weak var labelStackView: UIStackView!
+    @IBOutlet weak var indicatorView: UIActivityIndicatorView!
     @IBOutlet weak var newCaseLabel: UILabel!
-    
     @IBOutlet weak var pieChartView: PieChartView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.indicatorView.startAnimating()
+        
         //앱이 실행되고 뷰컴트롤러가 표시될 때 시도별형환Api가 호출되게 구현
         self.fetchCovidOverview(completionHandler: {[weak self] result in //순환참조를 방지하기 위해 캡쳐리스트? 정의
             guard let self = self else {return} //self가 일시적으로 strong reference가 되도록 만들어 준다.
+            self.indicatorView.stopAnimating() //서버에서 응답이 오면 인디케이터를 중단시킨다
+            self.indicatorView.isHidden = true
+            self.labelStackView.isHidden = false
+            self.pieChartView.isHidden = false
+            
             switch result {
             case let .success(result):
                 self.configureStackView(koreaCovidOverview: result.korea) //Alamofire response 메서드의 completionHandler는 메인쓰레드에서 동작하기 때문에 따로 main DispatchQueue를 만들어 주지 않아도 된다.
@@ -55,6 +63,7 @@ class ViewController: UIViewController {
     }
     
     func configureChartView(covidOverviewList: [CovidOverview]) {
+        self.pieChartView.delegate = self
         //pieChart에 데이터를 표시하려면 pieChart 데이터 entry라는 객체에 데이터를 추가시켜주어야 한다. 메서드 파라미터에서 전달받은 covidOverviewList를 pieChart데이터 entry라는 객체로 맵핑시켜주자
         let entries = covidOverviewList.compactMap{ [weak self] overview -> PieChartDataEntry? in
             guard let self = self else {return nil} //self가 일시적으로 strong reference되도록 만든다.
@@ -137,3 +146,12 @@ class ViewController: UIViewController {
     }
 }
 
+extension ViewController: ChartViewDelegate {
+    //차트에서 항목이 선택되었을때 호출되는 메서드. entry 메서드 파라미터를 통해 선택된 항목에 저장되어 있는 대이터를 가져올 수 있다.
+    func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
+        guard let covidDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "CovidDetailViewController") as? CovidDetailViewController else {return}
+        guard let covidOverview = entry.data as? CovidOverview else {return} //다운 캐스팅
+        covidDetailViewController.covidOverview = covidOverview
+        self.navigationController?.pushViewController(covidDetailViewController, animated: true)
+    }
+}
